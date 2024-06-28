@@ -1,1 +1,1 @@
-# personal archive of bash scripts
+# personal archive of shell scripts
