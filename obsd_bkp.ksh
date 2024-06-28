@@ -1,6 +1,6 @@
 #!/bin/ksh
 #
-# Copyright (c)  Nicholas Marriott
+# Copyright (c) Nicholas Marriott <nicholas.marriott@gmail.com>
 #               2024, Raffaele Marco Bagnato <software@rmbagnato.eu>
 #
 # Redistribution and use in source and binary forms, with or without
