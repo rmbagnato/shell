@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 #
 # Script that mount SFTP with rclone
 # create for ubuntu 24.04 - rclone 1.60.1 - bash 5.2.21
