@@ -104,7 +104,7 @@ for i in $SOURCES; do
 	  while read j; do
 	    (echo $j|grep '\.\.' >/dev/null) && echo illegal $i/$j && continue
 	    (echo $j|grep '^/'   >/dev/null) && echo illegal $i/$j && continue
-	    echo ignore $i/$j
+	    echo "IGNORE $i/$j"
 	    chflags -R nodump "$i/$j" || exit
 	  done < "$TARGET.ignore"
   fi
@@ -127,6 +127,7 @@ for i in $SOURCES; do
 	  rm -f -- "$TARGET"/*.[2-9]*
   fi
 done
+echo "DF:"
 df -h $LBKPATH
 
 # update day
