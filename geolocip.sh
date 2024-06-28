@@ -3,7 +3,7 @@
 # Script that print data from a given IP adress
 # Create for ubuntu 24.04 - bash 5.2.21 - jq 1.7 - curl 8.5.0 - tr  9.4
 #
-# Copyright (c) 11 Sep 2020 Abhishek Shingane (abhisheks@iitbhilai.ac.in)
+# Copyright (c) 2020, Abhishek Shingane (abhisheks@iitbhilai.ac.in)
 #               2024, Raffaele Marco Bagnato (software@rmbagnato.eu)
 #
 # Redistribution and use in source and binary forms, with or without
