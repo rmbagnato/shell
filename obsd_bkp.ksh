@@ -60,16 +60,14 @@ export RCLONE_CONFIG
 
 if ! [ -d $LBKPATH ]
 then
-    print "NO BACKUP DISK !!!"
+    echo "NO BACKUP DISK"
     exit 1
 fi
 
 # check free space
 USED=`df $LBKPATH|$AWK '/^\// { print substr($5, 0, length($5) - 1) }'`
 if [ $USED -gt 75 ]; then
-    echo "-------------------------------------------------------------------"
-    echo "INSUFFICIENT DISK SPACE"
-    echo "-------------------------------------------------------------------"
+    echo "INSUFFICIENT DISK SPACE: "
     df -h $LBKPATH
     exit 1
 fi
