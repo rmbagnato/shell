@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 #
 # Script that print data from a given IP adress
 # Create for ubuntu 24.04 - bash 5.2.21 - jq 1.7 - curl 8.5.0 - tr  9.4
