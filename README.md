@@ -13,6 +13,7 @@ The repository contains the following scripts:
 
 2. **Script KornShell (ksh)**
    - `obsd_bkp.ksh`: Script that uses rclone and dump to make system backups and synchronize them across multiple machines.
+   - `nfs_mount.ksh`: Script that mount a nfs resource.
 
 ## Requirements
 
