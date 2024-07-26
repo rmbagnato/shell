@@ -12,7 +12,7 @@ The repository contains the following scripts:
    - `rclone_sftp.bash`: Script that uses rclone to be able to mount remote resources.
 
 2. **Script KornShell (ksh)**
-   - `obsd_bkp.ksh`: Script that uses rclone and dump to make system backups and synchronize them across multiple machines.
+   - `restic_backup.ksh`: Script that uses restic and rclone to make system backups.
    - `nfs_mount.ksh`: Script that mount a nfs resource.
 
 ## Requirements
