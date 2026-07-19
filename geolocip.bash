@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #
-# Script that print data from a given IP adress
-# Create for ubuntu 24.04 - bash 5.2.21 - jq 1.7 - curl 8.5.0 - tr  9.4
+# Script that prints geolocation data for a given IPv4 address
+# Created for ubuntu 24.04 - bash 5.2.21 - jq 1.7 - curl 8.5.0
 #
 # Copyright (c) 2020, Abhishek Shingane (abhisheks@iitbhilai.ac.in)
 #               2024, Raffaele Marco Bagnato (software@rmbagnato.eu)
@@ -10,7 +10,7 @@
 # modification, are permitted provided that the following conditions are met:
 #
 # 1. Redistributions of source code must retain the above copyright notice, this
-#    list of conditions and the following disclaimer. 
+#    list of conditions and the following disclaimer.
 # 2. Redistributions in binary form must reproduce the above copyright notice,
 #    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
@@ -29,38 +29,47 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Geolocation API URL
-GAPIURL="http://ip-api.com/json/"
-# JQ path
-JQ=/usr/bin/jq
-# CURL path
-CURL=/usr/bin/curl
-# TR path
-TR=/usr/bin/tr
+set -o pipefail
 
-if ! [ -x "$(command -v jq)" ]; then
-  echo 'Error: jq is not installed.'
+# Geolocation API base URL (no trailing slash)
+GAPIURL="http://ip-api.com/json"
+# Fields requested from the API
+GFIELDS="status,message,city,regionName,country"
+
+for tool in jq curl; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    echo "Error: $tool is not installed." >&2
+    exit 1
+  fi
+done
+
+IP_RE='^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$'
+
+if [[ -z "$1" ]]; then
+  echo "Usage: $0 <ip>" >&2
   exit 1
 fi
 
-if ! [ -x "$(command -v curl)" ]; then
-  echo 'Error: curl is not installed.'
+if ! [[ "$1" =~ $IP_RE ]]; then
+  echo "Error: '$1' is not a valid IPv4 address." >&2
   exit 1
 fi
 
-if ! [ -x "$(command -v tr)" ]; then
-  echo 'Error: tr is not installed.'
+response=$(curl -s --max-time 5 "${GAPIURL}/${1}?fields=${GFIELDS}")
+
+if [[ -z "$response" ]]; then
+  echo "Error: no response from geolocation service." >&2
   exit 1
 fi
 
-if ! [[ "$1" =~ ^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$ ]]; then
-  echo 'Usage:  ' $0 ' <ip> '
-        exit 1
+status=$(jq -r '.status' <<<"$response")
+
+if [[ "$status" != "success" ]]; then
+  message=$(jq -r '.message // "unknown error"' <<<"$response")
+  echo "Error: $message" >&2
+  exit 1
 fi
 
-DATA=($(${CURL} ${GAPIURL}/$1 -s | ${JQ} -r '.status, .city, .regionName, .country' | ${TR} -d '[]," '))
+IFS=$'\t' read -r city region country < <(jq -r '[.city, .regionName, .country] | @tsv' <<<"$response")
 
-if [[ "${DATA[0]}" == "success" ]]; then
-        echo "${DATA[1]}, ${DATA[2]} ${DATA[3]}"
-fi 
-
+echo "${city}, ${region} ${country}"
